@@ -34,3 +34,35 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+// Test db connection
+import getDbConnection from '@/lib/neon/db'
+
+export default async function Dashboard() {
+const sql = await getDbConnection()
+const response = await sql`SELECT version()`
+const data = JSON.stringify(response)
+
+    return <>{data}</>
+
+}
+
+// Test user subscription
+export default async function Dashboard() {
+const user = await currentUser()
+const email = user?.emailAddresses?.[0]?.emailAddress ?? 'no email'
+
+    const sql = await getDbConnection()
+    const response =
+    	await sql`SELECT * FROM users where status = 'cancelled' AND email = ${email}`
+
+    const data = JSON.stringify(response)
+
+    return (
+    	<div>
+    		<h1>Dashboard Page</h1>
+    		<p>{data}</p>
+    	</div>
+    )
+
+}
